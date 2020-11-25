@@ -4,7 +4,7 @@ library(countrycode)
 library(tidyverse)
 
 #getting my data and cleaning it for analysis
-setwd("~/Dropbox/PhDApps/WritingSample/data")
+setwd("~/Dropbox/PhDApps/WritingSample/DemographyAnalysis")
 
 #getting Polity Data and cleaning
 polity <- read_xls('p5v2018.xls')
@@ -36,9 +36,10 @@ final_df <- full_join(first_merged, wbdata)
 
 final_df[final_df==-99] = NA #changing -99s to NA
 final_df$rebellion = ifelse(final_df$year>=1985, final_df$reb, final_df$rebel) #creating a rebellion column with the combined coverage of both MAR's reb and rebellion score
+final_df$rebellion_binary = ifelse(final_df$rebellion > 2, 1, 0) #creating a binary variable on rebellion
 final_df$gdppc = scale(final_df$gdppc) #scaling both continuous variables
 final_df$country_pop = scale(final_df$country_pop) 
+head(final_df)
 final_df <- final_df[-c(7, 11, 12, 13)] #dropping columns not necessary for the analysis
-final_df = final_df[, c(1,2,3,4,5,6,9,13,7,8,10,11,12)] #reordering columns to have outcomes at the beginning
-write_csv(final_df, '~/Dropbox/PhDApps/WritingSample/finaldata.csv')
-
+final_df = final_df[, c(1,2,3,4,5,6,9,13,14,7,8,10,11,12)] #reordering columns to have outcomes at the beginning
+write_csv(final_df, '~/Dropbox/PhDApps/WritingSample/DemographyAnalysis/finaldata.csv')
